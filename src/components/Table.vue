@@ -20,12 +20,13 @@
       </div>
     </table>
   </td>
+  <button v-on:click="addEmployee">Add employee</button>
 </template>
 <script>
 export default {
   name: "Table",
   props: {
-    msg: String,
+    date: Date,
   },
   data() {
     return {
@@ -48,6 +49,13 @@ export default {
       return employee.schedule
         .map((a) => parseInt(a.raw))
         .reduce((a, b) => a + b, 0);
+    },
+    addEmployee: function () {
+      console.log(this.date.toString());
+      this.employees.push({
+        name: "Фамилия 4",
+        schedule: [{ raw: 10 }, { raw: 9 }, { raw: 3 }],
+      });
     },
   },
 };
