@@ -1,35 +1,30 @@
 <template>
-  <input v-model="date" type="month" id="start" name="start" min="2020-12" />
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <!-- <HelloWorld msg="Welcome to Your Vue.js App" /> -->
-  <Table :date="new Date(date)" />
+  <input id="start" v-model="date" min="2020-12" name="start" type="month"/>
+  <img alt="Vue logo" src="./assets/logo.png"/>
+  <Table :date="dateOnFirstDayOfMonth"/>
 </template>
-
 <script>
-// import HelloWorld from "./components/HelloWorld.vue";
 import Table from "./components/Table.vue";
 
 export default {
   name: "App",
   components: {
-    // HelloWorld,
     Table,
   },
   data() {
     return {
-      date: new Date(),
+      date: null
     };
   },
+  computed: {
+    dateOnFirstDayOfMonth: function () {
+      let today = this.date == null ? new Date() : new Date(this.date)
+      return new Date(today.getFullYear(), today.getMonth(), 1)
+    }
+  },
+
 };
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
 </style>
