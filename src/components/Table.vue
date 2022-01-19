@@ -7,10 +7,11 @@
 
       <template v-for="(employee, index) in monthYearToSchedule.get(dateString)" :key="employee.id + index">
         <tr v-if="index === 0">
-          <th></th>
+          <th>ФИО</th>
+          <th>Должность</th>
           <template v-for="(day, index) in allDaysInMonth" :key="day.getUTCMilliseconds() + index">
             <th v-bind:class="{ weekend: isWeekend(day) }">
-              {{ day.toLocaleDateString('ru').slice(0, 5) }}
+              {{ day.toLocaleDateString('ru').slice(0, 2) }}
             </th>
           </template>
           <th class="summary">Всего</th>
@@ -18,7 +19,8 @@
           <th class="summary">Празд.</th>
         </tr>
         <tr>
-          <th><input v-model="employee.name"/></th>
+          <th><textarea v-model="employee.name"/></th>
+          <th><textarea v-model="employee.function"/></th>
           <td
               v-for="(load, index) in employee.schedule"
               :key="employee.name + index"
@@ -38,7 +40,8 @@
       </template>
     </table>
   </td>
-  <button v-on:click="addEmployee">Add employee</button>
+  <button v-on:click="addEmployee">Добавить работника</button>
+  <button v-on:click="generateCSVString">Скачать</button>
 </template>
 <script>
 export default {
@@ -98,7 +101,31 @@ export default {
         id: Math.floor(Math.random() * 100)
       });
     },
-
+    generateCSVString: function () {
+      let res = '\ufeff' + 'Расписание,' + '\n'
+      res += ','
+      this.allDaysInMonth.forEach((day) => res += day.toLocaleDateString('ru').slice(0, 2) + ',')
+      res += 'Всего, Ночных, Празд.\n'
+      let schedule = this.monthYearToSchedule.get(this.dateString)
+      schedule?.forEach((employee) => {
+        res += (employee.name + ',')
+        employee.schedule.forEach((sched) => res += (sched.load ? sched.load : 0) + ',')
+        res += this.sumHours(employee) + ','
+        res += this.sumHours(employee, 'н') + ','
+        res += this.sumHours(employee, 'п') + '\n'
+      })
+      let file = new Blob([res], {type: 'text/csv;charset=UTF-8'});
+      let a = document.createElement("a"), url = URL.createObjectURL(file);
+      a.href = url;
+      a.download = this.date.toLocaleDateString('ru').slice(0, 5) + '.csv'
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      }, 0);
+      return res
+    }
   },
 };
 </script>

@@ -1,6 +1,5 @@
 <template>
   <input id="start" v-model="date" min="2020-12" name="start" type="month"/>
-  <img alt="Vue logo" src="./assets/logo.png"/>
   <Table :date="dateOnFirstDayOfMonth"/>
 </template>
 <script>
