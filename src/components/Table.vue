@@ -25,7 +25,7 @@
               v-for="(load, index) in employee.schedule"
               :key="employee.name + index"
           >
-            <input v-model="load.raw" class="hours" maxlength="3"/>
+            <input v-model="load.raw" class="hours" maxlength="4"/>
           </td>
           <td>
             {{ sumHours(employee) }}
@@ -79,9 +79,9 @@ export default {
     sumHours: function (employee, token = null) {
       return employee.schedule
           .map((a) => a.raw)
-          .filter((a) => parseInt(a))
+          .filter((a) => parseFloat(a))
           .filter((a) => token == null ? true : a.toLowerCase().includes(token))
-          .map((a) => parseInt(a))
+          .map((a) => parseFloat(a))
           .reduce((a, b) => a + b, 0)
     },
     initScheduleIfNeeded: function () {
