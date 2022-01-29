@@ -109,7 +109,7 @@ export default {
       let schedule = this.monthYearToSchedule.get(this.dateString)
       schedule?.forEach((employee) => {
         res += (employee.name + ',')
-        employee.schedule.forEach((sched) => res += (sched.load ? sched.load : 0) + ',')
+        employee.schedule.forEach((sched) => res += (sched.raw ? sched.raw : 0) + ',')
         res += this.sumHours(employee) + ','
         res += this.sumHours(employee, 'н') + ','
         res += this.sumHours(employee, 'п') + '\n'
